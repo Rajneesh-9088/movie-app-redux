@@ -1,7 +1,9 @@
 import React from 'react';
 import { StoreContext } from '..';
+import {connect } from 'react-redux';
 
-import { addMovieToList, handleMovieSearch } from '../actions'
+import { addMovieToList, handleMovieSearch } from '../actions';
+
 
 
 
@@ -18,17 +20,18 @@ class Navbar extends React.Component {
 
     handleAddToMovies = (movie) => {
         this.props.dispatch(addMovieToList(movie));
-        this.setState({
-            showSearchResults: false
-        })
+        // this.setState({
+        //     showSearchResults: false
+        // })
     }
 
-    handleSearch = () => {
-        const { searchText } = this.state;
+    handleSearchClick = () =>{
+        const {searchText} = this.state;
         this.props.dispatch(handleMovieSearch(searchText));
-
     }
-    handleChange = (e) => {
+
+  
+    handleSearchChange = (e) => {
         this.setState({
             searchText: e.target.value
         });
@@ -42,8 +45,8 @@ class Navbar extends React.Component {
         return (
             <div className="nav">
                 <div className="search-container">
-                    <input onChange={this.handleChange} />
-                    <button id="search-btn" onClick={this.handleSearch} >Search</button >
+                    <input onChange={this.handleSearchChange} />
+                    <button id="search-btn" onClick={this.handleSearchClick} >Search</button >
 
                     {showSearchResults &&
                         <div className="search-results">
@@ -65,14 +68,21 @@ class Navbar extends React.Component {
     }
 }
 
-class NavbarWrapper extends React.Component {
-    render () {
-        return (
-            <StoreContext.Consumer>
-                {(store) => <Navbar dispatch={store.dispatch} search={this.props.search} /> }
-            </StoreContext.Consumer>
-        )
-    }
+// class NavbarWrapper extends React.Component {
+//     render () {
+//         return (
+//             <StoreContext.Consumer>
+//                 {(store) => <Navbar dispatch={store.dispatch} search={this.props.search} /> }
+//             </StoreContext.Consumer>
+//         )
+//     }
+// }
+
+function mapStateToProps({search}) {
+
+    return {
+        search,
+    };
 }
 
-export default NavbarWrapper;
+export default connect(mapStateToProps) (Navbar);
